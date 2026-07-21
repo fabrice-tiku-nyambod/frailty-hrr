@@ -1,0 +1,245 @@
+
+RQ1: n = 164 test instances with both naive and confirmed timing computable
+
+--- Wilcoxon signed-rank test: discrepancy_sec vs 0 ---
+
+	Wilcoxon signed rank test with continuity correction
+
+data:  rq1$discrepancy_sec
+V = 12030, p-value < 2.2e-16
+alternative hypothesis: true location is not equal to 0
+95 percent confidence interval:
+ 48.36504 71.49244
+sample estimates:
+(pseudo)median 
+      60.12112 
+
+median discrepancy: 56.5 s (IQR 7.9 to 110.9)
+
+RQ1 (HRR paired comparison): n = 160
+
+--- Wilcoxon signed-rank test: naive vs confirmed delta_hr60 (paired) ---
+
+	Wilcoxon signed rank test with continuity correction
+
+data:  rq1_hr$delta_hr60_naive and rq1_hr$delta_hr60_confirmed
+V = 11479, p-value < 2.2e-16
+alternative hypothesis: true location shift is not equal to 0
+95 percent confidence interval:
+ 2.387622 3.884283
+sample estimates:
+(pseudo)median 
+      3.100497 
+
+
+Bland-Altman bias = 4.17 bpm, limits of agreement [-8.05, 16.40]
+saved plot: data_derived/rq1_bland_altman.png
+
+--- factor level counts in final modeling dataset (check for sparse cells) ---
+
+  I-II III-IV   <NA> 
+   160     47      0 
+
+none  any <NA> 
+ 133   74    0 
+
+FALSE  TRUE  <NA> 
+    2   205     0 
+
+          CABG isolated_valve       combined           <NA> 
+           110             27             70              0 
+
+RQ2: modeling dataset n = 207 test instances, 74 patients
+
+--- beta-blocker prevalence (why it is excluded from reported models) ---
+
+FALSE  TRUE  <NA> 
+    2   205     0 
+
+--- attempted model WITH beta_blockers (not used for reported results; see note above) ---
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's
+  method [lmerModLmerTest]
+Formula: delta_hr60_confirmed ~ test_type + test_duration_s + efs_score +  
+    nyha_binary + af_binary + beta_blockers * efs_score + age_years +  
+    days_after_surgery + (1 | patient_id)
+   Data: model_data
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+   1266.7    1310.1    -620.4    1240.7       194 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.9814 -0.5059 -0.1031  0.3976  4.2657 
+
+Random effects:
+ Groups     Name        Variance Std.Dev.
+ patient_id (Intercept) 12.5     3.536   
+ Residual               15.6     3.950   
+Number of obs: 207, groups:  patient_id, 74
+
+Fixed effects:
+                     Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)         -1.190231   8.052075  50.367117  -0.148   0.8831    
+test_typeSTAIR       1.311570   0.798686 116.556186   1.642   0.1033    
+test_type6MWT        8.128614   1.151994 133.628190   7.056 8.38e-11 ***
+test_typeVELO        4.470636   0.918874 124.961315   4.865 3.37e-06 ***
+test_duration_s     -0.006897   0.002984 154.387256  -2.311   0.0221 *  
+efs_score            0.605177   0.319432  50.039432   1.895   0.0639 .  
+nyha_binaryIII-IV    0.679624   1.231019  45.682685   0.552   0.5836    
+af_binaryany         2.837003   1.074160  44.843032   2.641   0.0113 *  
+beta_blockersTRUE   -2.641561   4.675080  60.337817  -0.565   0.5741    
+age_years            0.024978   0.101460  45.769514   0.246   0.8066    
+days_after_surgery  -0.033873   0.066621  50.372405  -0.508   0.6134    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) t_STAI t_6MWT t_VELO tst_d_ efs_sc n_III- af_bnr b_TRUE
+tst_tySTAIR -0.033                                                        
+tst_typ6MWT -0.025  0.339                                                 
+tst_typVELO -0.018  0.403  0.630                                          
+test_drtn_s  0.011 -0.042 -0.722 -0.511                                   
+efs_score   -0.044  0.027  0.048  0.024 -0.059                            
+nyh_bIII-IV -0.128 -0.033  0.010  0.007 -0.028  0.022                     
+af_binaryny  0.017 -0.033 -0.043 -0.040  0.034 -0.026 -0.049              
+bt_blckTRUE -0.425  0.066  0.100  0.048 -0.081  0.118 -0.073 -0.076       
+age_years   -0.777 -0.058 -0.053 -0.038  0.018 -0.262  0.147 -0.001 -0.171
+dys_ftr_srg -0.158  0.024 -0.004  0.001  0.012 -0.151  0.000 -0.056 -0.099
+            ag_yrs
+tst_tySTAIR       
+tst_typ6MWT       
+tst_typVELO       
+test_drtn_s       
+efs_score         
+nyh_bIII-IV       
+af_binaryny       
+bt_blckTRUE       
+age_years         
+dys_ftr_srg  0.117
+fit warnings:
+fixed-effect model matrix is rank deficient so dropping 1 column / coefficient
+
+--- rows used per model (must match for a valid LRT comparison) ---
+m_a: 207 | m_b: 207 | m_c: 207 | m_d: 207 | model_data: 207
+
+--- Model comparison (likelihood-ratio tests across blocks) ---
+Data: model_data
+Models:
+m_a: delta_hr60_confirmed ~ test_type + test_duration_s + (1 | patient_id)
+m_b: delta_hr60_confirmed ~ test_type + test_duration_s + efs_score + (1 | patient_id)
+m_c: delta_hr60_confirmed ~ test_type + test_duration_s + efs_score + nyha_binary + af_binary + age_years + days_after_surgery + (1 | patient_id)
+m_d: delta_hr60_confirmed ~ test_type + test_duration_s + efs_score + nyha_binary + af_binary + age_years + days_after_surgery + surgery_type + copd + calcium_channel_blockers + (1 | patient_id)
+    npar    AIC    BIC  logLik -2*log(L)  Chisq Df Pr(>Chisq)  
+m_a    7 1266.2 1289.6 -626.12    1252.2                       
+m_b    8 1264.2 1290.9 -624.10    1248.2 4.0288  1    0.04473 *
+m_c   12 1265.1 1305.0 -620.53    1241.1 7.1430  4    0.12852  
+m_d   16 1270.7 1324.0 -619.35    1238.7 2.3512  4    0.67147  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+--- Block B summary (core + frailty; likely primary reported model) ---
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's
+  method [lmerModLmerTest]
+Formula: delta_hr60_confirmed ~ test_type + test_duration_s + efs_score +  
+    (1 | patient_id)
+   Data: model_data
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+   1264.2    1290.9    -624.1    1248.2       199 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.0565 -0.4861 -0.0718  0.3703  4.2359 
+
+Random effects:
+ Groups     Name        Variance Std.Dev.
+ patient_id (Intercept) 14.41    3.796   
+ Residual               15.63    3.954   
+Number of obs: 207, groups:  patient_id, 74
+
+Fixed effects:
+                  Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)      -1.707581   2.057418  53.569377  -0.830   0.4102    
+test_typeSTAIR    1.417189   0.797687 116.642425   1.777   0.0782 .  
+test_type6MWT     8.290285   1.150948 133.682790   7.203 3.87e-11 ***
+test_typeVELO     4.602754   0.920611 123.332211   5.000 1.92e-06 ***
+test_duration_s  -0.007309   0.002996 151.661285  -2.440   0.0158 *  
+efs_score         0.644385   0.319342  49.474318   2.018   0.0490 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) t_STAI t_6MWT t_VELO tst_d_
+tst_tySTAIR -0.173                            
+tst_typ6MWT -0.054  0.334                     
+tst_typVELO -0.091  0.400  0.629              
+test_drtn_s -0.079 -0.037 -0.721 -0.510       
+efs_score   -0.935  0.013  0.027  0.010 -0.046
+
+--- Block C summary (+ clinical correlates) ---
+Linear mixed model fit by maximum likelihood . t-tests use Satterthwaite's
+  method [lmerModLmerTest]
+Formula: delta_hr60_confirmed ~ test_type + test_duration_s + efs_score +  
+    nyha_binary + af_binary + age_years + days_after_surgery +  
+    (1 | patient_id)
+   Data: model_data
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+   1265.1    1305.1    -620.5    1241.1       195 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.9934 -0.5054 -0.1002  0.4034  4.2376 
+
+Random effects:
+ Groups     Name        Variance Std.Dev.
+ patient_id (Intercept) 12.65    3.557   
+ Residual               15.58    3.947   
+Number of obs: 207, groups:  patient_id, 74
+
+Fixed effects:
+                     Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)         -3.132021   7.316891  48.087680  -0.428   0.6705    
+test_typeSTAIR       1.340657   0.796421 118.070577   1.683   0.0949 .  
+test_type6MWT        8.193770   1.145713 136.641379   7.152 4.72e-11 ***
+test_typeVELO        4.498032   0.917300 125.804784   4.904 2.85e-06 ***
+test_duration_s     -0.007047   0.002974 156.164921  -2.370   0.0190 *  
+efs_score            0.627945   0.318387  50.356663   1.972   0.0541 .  
+nyha_binaryIII-IV    0.628451   1.232491  46.090230   0.510   0.6126    
+af_binaryany         2.795667   1.075232  45.151788   2.600   0.0126 *  
+age_years            0.015228   0.100353  45.994793   0.152   0.8801    
+days_after_surgery  -0.037703   0.066538  50.785580  -0.567   0.5735    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) t_STAI t_6MWT t_VELO tst_d_ efs_sc n_III- af_bnr ag_yrs
+tst_tySTAIR -0.006                                                        
+tst_typ6MWT  0.019  0.335                                                 
+tst_typVELO  0.003  0.401  0.630                                          
+test_drtn_s -0.026 -0.037 -0.720 -0.509                                   
+efs_score    0.007  0.019  0.037  0.018 -0.050                            
+nyh_bIII-IV -0.176 -0.028  0.017  0.010 -0.034  0.031                     
+af_binaryny -0.017 -0.028 -0.036 -0.036  0.028 -0.018 -0.055              
+age_years   -0.953 -0.047 -0.037 -0.030  0.004 -0.248  0.137 -0.014       
+dys_ftr_srg -0.221  0.031  0.006  0.006  0.004 -0.141 -0.007 -0.064  0.102
+
+--- VIF, Block B fixed effects ---
+                    GVIF Df GVIF^(1/(2*Df))
+test_type       2.407262  3        1.157676
+test_duration_s 2.410296  1        1.552513
+efs_score       1.002813  1        1.001406
+null device 
+          1 
+saved plot: data_derived/rq2_residual_diagnostics.png
+
+--- adjusted residual (test type + duration removed) by EFS tertile ---
+# A tibble: 3 × 4
+  efs_tertile mean_adj median_adj     n
+        <int>    <dbl>      <dbl> <int>
+1           1  -0.579      -0.949    69
+2           2  -0.282      -0.823    69
+3           3  -0.0370     -1.26     69
+saved plots: fig3a (test type), fig3b (adjusted EFS, continuous effect plot), figS3 (raw/unadjusted EFS, supplementary)
+
+Done.

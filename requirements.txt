@@ -1,0 +1,5 @@
+wfdb==4.3.1
+numpy
+pandas
+scipy
+matplotlib
